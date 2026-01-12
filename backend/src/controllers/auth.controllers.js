@@ -30,15 +30,12 @@ export const userSignup = async (req, res) => {
       password: hashedPassword,
     });
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {});
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    
+    });
 
     return res
-      .cookie("token", token, {
-        httpOnly: true,
-        secure: true, // HTTPS required
-        sameSite: "none", // cross-domain
-        maxAge: 24 * 60 * 60 * 1000,
-      })
+      .cookie("token", token,)
       .status(201)
       .json({
         success: true,
