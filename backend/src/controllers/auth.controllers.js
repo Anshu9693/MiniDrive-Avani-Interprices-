@@ -31,14 +31,14 @@ export const userSignup = async (req, res) => {
     });
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      httpOnly: true,
-      secure: true, // must be true for HTTPS (Vercel)
-      sameSite: "none", // allows cross-site cookies
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    
     });
 
     return res
-      .cookie("token", token)
+      .cookie("token", token,{httpOnly: true,
+  secure: true,       // must be true for HTTPS (Vercel)
+  sameSite: "none",   // allows cross-site cookies
+  maxAge: 24 * 60 * 60 * 1000 })
       .status(201)
       .json({
         success: true,
