@@ -43,7 +43,7 @@ const AdminNavbar = () => {
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500/80 hover:bg-red-500 text-white text-sm font-semibold transition"
           >
             <FaSignOutAlt />
-            {Logout}
+            Logout
           </button>
         </div>
       </div>
