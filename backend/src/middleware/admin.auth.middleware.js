@@ -1,17 +1,16 @@
-import AdminModel from "../models/admin.model.js";
-import jwt from "jsonwebtoken";
-
 export const adminAuthMiddleware = async (req, res, next) => {
-  const token = req.cookies.token;
-
-  if (!token) {
-    return res.status(400).json({
-      message: "Please login first",
-    });
-  }
-
   try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded.role !== "admin") {
+      return res.status(403).json({ message: "Admin access only" });
+    }
 
     const admin = await AdminModel.findById(decoded.userId).select("-password");
 
@@ -19,10 +18,9 @@ export const adminAuthMiddleware = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid token" });
     }
 
-    req.admin = admin; // ✅ assign admin object
+    req.admin = admin;
     next();
   } catch (error) {
-    console.log("Admin middleware error: " + error.message);
-    res.status(500).json({ message: error.message });
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
