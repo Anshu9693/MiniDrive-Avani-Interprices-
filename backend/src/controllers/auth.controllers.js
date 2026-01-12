@@ -31,7 +31,10 @@ export const userSignup = async (req, res) => {
     });
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
+      httpOnly: true,
+      secure: true, // must be true for HTTPS (Vercel)
+      sameSite: "none", // allows cross-site cookies
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
     return res
@@ -107,15 +110,14 @@ export const userLogin = async (req, res) => {
 
 export const userLogout = (req, res) => {
   try {
-    res.clearCookie("token").status(200).json({message:"Logout successful"});
+    res.clearCookie("token").status(200).json({ message: "Logout successful" });
   } catch (error) {
     console.error("Logout Error:", error);
     return res.status(500).json({});
   }
 };
 
-
-        // ADMINS Controllers
+// ADMINS Controllers
 export const adminSignup = async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
@@ -168,7 +170,6 @@ export const adminSignup = async (req, res) => {
   }
 };
 
-
 export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -201,13 +202,12 @@ export const adminLogin = async (req, res) => {
     // Generate JWT token with role
     const token = jwt.sign(
       { userId: admin._id, role: "admin" },
-      process.env.JWT_SECRET,
-     
+      process.env.JWT_SECRET
     );
 
     // Set token in secure cookie
     return res
-      .cookie("token", token,)
+      .cookie("token", token)
       .status(200)
       .json({
         success: true,
@@ -228,16 +228,14 @@ export const adminLogin = async (req, res) => {
   }
 };
 
-
 export const adminLogout = (req, res) => {
   try {
-    res.clearCookie("token").status(200).json({ message: "Admin logout successful" });
+    res
+      .clearCookie("token")
+      .status(200)
+      .json({ message: "Admin logout successful" });
   } catch (error) {
     console.error("Admin Logout Error:", error);
     return res.status(500).json({});
   }
 };
-
-
-
-
