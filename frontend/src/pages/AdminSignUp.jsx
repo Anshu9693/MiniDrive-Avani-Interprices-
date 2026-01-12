@@ -36,7 +36,7 @@ const AdminSignUp = () => {
 
       setLoading(false);
       alert(res.data.message || "Admin signup successful");
-      navigate("/admin/login");
+      navigate("/admin/dashboard");
     } catch (error) {
       setLoading(false);
       alert(error.response?.data?.message || "Signup failed");
