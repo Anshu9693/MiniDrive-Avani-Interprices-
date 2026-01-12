@@ -2,11 +2,11 @@ import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 
 export const userAuthMiddleware = async (req, res, next) => {
-  const token = req.cookies.token;
+  const token = req.cookies?.token;
 
   if (!token) {
-    return res.status(400).json({
-      message: "user Login first",
+    return res.status(401).json({
+      message: "Please login first",
     });
   }
 
@@ -17,12 +17,17 @@ export const userAuthMiddleware = async (req, res, next) => {
       .findById(decoded.userId)
       .select("-password");
 
+    if (!user) {
+      return res.status(401).json({
+        message: "User not found",
+      });
+    }
+
     req.user = user;
     next();
   } catch (error) {
-    console.log("middleware error " + error.message);
-    res.status(500).json({
-      message: error.message,
+    return res.status(401).json({
+      message: "Invalid or expired token",
     });
   }
 };

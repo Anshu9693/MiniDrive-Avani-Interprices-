@@ -3,6 +3,13 @@ import adminModel from "../models/admin.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  maxAge: 24 * 60 * 60 * 1000,
+};
+
 export const userSignup = async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
@@ -30,12 +37,10 @@ export const userSignup = async (req, res) => {
       password: hashedPassword,
     });
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-    
-    });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {});
 
     return res
-      .cookie("token", token,)
+      .cookie("token", token, cookieOptions)
       .status(201)
       .json({
         success: true,
@@ -85,7 +90,7 @@ export const userLogin = async (req, res) => {
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
     return res
-      .cookie("token", token)
+      .cookie("token", token, cookieOptions)
       .status(200)
       .json({
         success: true,
@@ -107,7 +112,10 @@ export const userLogin = async (req, res) => {
 
 export const userLogout = (req, res) => {
   try {
-    res.clearCookie("token").status(200).json({ message: "Logout successful" });
+    res
+      .clearCookie("token", { httpOnly: true, secure: true, sameSite: "none" })
+      .status(200)
+      .json({ message: "Logout successful" });
   } catch (error) {
     console.error("Logout Error:", error);
     return res.status(500).json({});
@@ -147,7 +155,7 @@ export const adminSignup = async (req, res) => {
     });
 
     return res
-      .cookie("token", token)
+      .cookie("token", token, cookieOptions)
       .status(201)
       .json({
         success: true,
@@ -204,7 +212,7 @@ export const adminLogin = async (req, res) => {
 
     // Set token in secure cookie
     return res
-      .cookie("token", token)
+      .cookie("token", token, cookieOptions)
       .status(200)
       .json({
         success: true,
@@ -228,7 +236,7 @@ export const adminLogin = async (req, res) => {
 export const adminLogout = (req, res) => {
   try {
     res
-      .clearCookie("token")
+      .clearCookie("token", { httpOnly: true, secure: true, sameSite: "none" })
       .status(200)
       .json({ message: "Admin logout successful" });
   } catch (error) {
