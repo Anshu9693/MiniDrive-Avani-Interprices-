@@ -103,7 +103,8 @@ const AdminDashBord = () => {
             {/* Delete */}
             <button
               onClick={() => deleteFile(file._id)}
-              className="absolute top-2 right-2 bg-red-600/80 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+              className="absolute top-2 right-2 bg-red-600/80 hover:bg-red-600 text-white p-2 rounded-full 
+opacity-100 md:opacity-0 md:group-hover:opacity-100 transition"
             >
               <FaTrash size={14} />
             </button>

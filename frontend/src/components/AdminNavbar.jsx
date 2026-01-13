@@ -12,7 +12,7 @@ const AdminNavbar = () => {
       .catch((error) => {
         console.log("Admin logout error:", error);
       });
-    navigate("/admin/login");
+    navigate("/");
   };
 
   return (
