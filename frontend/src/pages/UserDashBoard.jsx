@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FaFilePdf, FaTrash } from "react-icons/fa";
+import { FaFilePdf, FaTrash, FaShareAlt } from "react-icons/fa";
 import UserNavbar from "../components/UserNabar";
+import ShareModal from "../components/ShareModal";
 
 const UserDashBoard = () => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [shareFile, setShareFile] = useState(null); // ✅ NEW
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -43,16 +45,16 @@ const UserDashBoard = () => {
   return (
     <>
       <UserNavbar />
+
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black px-6 py-10">
-        {/* Header */}
         <h1 className="text-3xl font-bold text-white mb-8">Your Files</h1>
 
-        {/* Loading */}
         {loading && <p className="text-gray-400">Loading files...</p>}
 
-        {/* Empty */}
         {!loading && files.length === 0 && (
-          <p className="text-gray-400">You haven't uploaded any files yet.</p>
+          <p className="text-gray-400">
+            You haven't uploaded any files yet.
+          </p>
         )}
 
         {/* Files Grid */}
@@ -78,7 +80,9 @@ const UserDashBoard = () => {
 
               {/* Info */}
               <div className="p-3">
-                <p className="text-sm text-white truncate">{file.fileName}</p>
+                <p className="text-sm text-white truncate">
+                  {file.fileName}
+                </p>
               </div>
 
               {/* Delete */}
@@ -88,18 +92,30 @@ const UserDashBoard = () => {
                   deleteFile(file._id);
                 }}
                 className="absolute top-2 right-2 bg-red-600/80 hover:bg-red-600 text-white p-2 rounded-full 
-                            opacity-100 md:opacity-0 md:group-hover:opacity-100 transition"
+                           opacity-100 md:opacity-0 md:group-hover:opacity-100 transition"
               >
                 <FaTrash size={14} />
+              </button>
+
+              {/* ✅ Share Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShareFile(file);
+                }}
+                className="absolute bottom-2 right-2 bg-indigo-500 hover:bg-indigo-600 
+                           text-white p-2 rounded-full text-xs
+                           opacity-100 md:opacity-0 md:group-hover:opacity-100 transition"
+              >
+                <FaShareAlt size={14} />
               </button>
             </div>
           ))}
         </div>
 
-        {/* FULL PAGE PREVIEW MODAL */}
+        {/* FULL PAGE PREVIEW */}
         {selectedFile && (
           <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50">
-            {/* Close */}
             <button
               className="absolute top-6 right-6 text-white text-3xl"
               onClick={() => setSelectedFile(null)}
@@ -107,7 +123,6 @@ const UserDashBoard = () => {
               ✕
             </button>
 
-            {/* Preview */}
             {selectedFile.fileType === "image" ? (
               <img
                 src={selectedFile.fileUrl}
@@ -122,6 +137,14 @@ const UserDashBoard = () => {
               />
             )}
           </div>
+        )}
+
+        {/* ✅ SHARE MODAL */}
+        {shareFile && (
+          <ShareModal
+            file={shareFile}
+            onClose={() => setShareFile(null)}
+          />
         )}
       </div>
     </>
