@@ -1,6 +1,15 @@
 import express from "express";
 import multer from "multer";
-import { createFile, deleteFile, getAllFiles, getUserFiles } from "../controllers/file.controller.js";
+import {
+  createFile,
+  deleteFile,
+  getAllFiles,
+  getUserFiles,
+  replaceFile,
+  sharedWithMe,
+  shareFile,
+  viewFile,
+} from "../controllers/file.controller.js";
 import { userAuthMiddleware } from "../middleware/user.auth.middleware.js";
 import { adminAuthMiddleware } from "../middleware/admin.auth.middleware.js";
 
@@ -11,7 +20,7 @@ const uploads = multer({
 });
 
 // [POST] /api/files/upload
-router.post("/upload", userAuthMiddleware ,uploads.single("file"), createFile);
+router.post("/upload", userAuthMiddleware, uploads.single("file"), createFile);
 
 //[GET] /api/files/all
 router.get("/all", adminAuthMiddleware, getAllFiles);
@@ -24,6 +33,16 @@ router.delete("/admin/:fileId", adminAuthMiddleware, deleteFile);
 
 //[DELETE] /api/files/user/:fileId
 router.delete("/user/:fileId", userAuthMiddleware, deleteFile);
-  
+
+// [POST] /api/files/share/:fileId
+
+router.post("/share/:fileId", userAuthMiddleware, shareFile);
+
+// [GET] /api/files/shared-with-me
+router.get("/shared-with-me", userAuthMiddleware, sharedWithMe);
+
+router.get("/view/:fileId", userAuthMiddleware, viewFile);
+
+router.put("/replace/:fileId",userAuthMiddleware,uploads.single("file"),replaceFile);
 
 export default router;
