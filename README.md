@@ -67,40 +67,8 @@ npm install
 
 ---
 
-## Environment Variables
 
-Create a `.env` file in the `backend` directory:
 
-```env
-# Server Configuration
-PORT=5000
-
-# Database Configuration
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/minidrive
-
-# JWT Configuration
-JWT_SECRET=your_secret_key_here_make_it_long_and_secure
-
-# Frontend URL (for CORS)
-FRONTEND_URL=http://localhost:5173
-
-# Cloud Storage Configuration (if using cloud storage)
-CLOUD_STORAGE_API_KEY=your_api_key
-CLOUD_STORAGE_BUCKET=your_bucket_name
-```
-
----
-
-## API Documentation
-
-### Base URL
-```
-http://localhost:5000/api
-```
-
-All requests use JSON format unless specified otherwise.
-
----
 
 ## Authentication
 
